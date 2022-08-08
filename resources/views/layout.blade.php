@@ -254,7 +254,7 @@
                             </div>
                         </div>
                     </div>
-                    @yield("content")
+                    @yield("content","dashboard")
                 </div>
                 <!-- /.container-fluid -->
 
