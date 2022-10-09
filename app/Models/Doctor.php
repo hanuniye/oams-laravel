@@ -17,4 +17,8 @@ class Doctor extends Model
         return $this->hasOne(Specialization::class,"id","specialist_id");
     }
 
+    public function patient(){
+        return $this->hasMany(Pateint::class);
+    }
+
 }

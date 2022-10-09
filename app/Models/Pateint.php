@@ -12,4 +12,5 @@ class Pateint extends Model
     public function docPateint(){
         return $this->hasOne(Doctor::class,"id","doctor_id");
     }
+
 }

@@ -37,6 +37,7 @@ class PateintController extends Controller
     {
         if(auth()->user()->role == "admin"){
             $data = Pateint::all();
+            
             foreach ($data as $item) {
                 $item["doctor_id"] = $item->docPateint->name;
                 $item["action"] =
@@ -57,9 +58,7 @@ class PateintController extends Controller
         else{
             $doctor = Doctor::where("user_id",auth()->user()->id)->first();
 
-            $patient = Pateint::where("doctor_id",$doctor->id)->get();
-
-            foreach ($patient as $item) {
+            foreach ($doctor->patient as $item) {
                 $item["doctor_id"] = $doctor->name;
                 $item["action"] =
                     "<td><i onclick='getUser($item->id)' class='fa-solid fa-pen-to-square text-success' style='font-size:20px; cursor:pointer;'></i></td>
@@ -72,8 +71,9 @@ class PateintController extends Controller
                 } else {
                     $item["status"] = "<span class='badge bg-danger'>$item->status</span>";
                 }
+
             }
-            return $patient;
+            return $doctor->patient;
         }
 
     }

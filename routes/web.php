@@ -67,8 +67,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post("/update/{id}", [PateintController::class, "update"])->name("pateint.update");
         Route::get("/delete/{id}", [PateintController::class, "delete"])->name("pateint.delete");
         Route::get("/getDoctor/{id}", [PateintController::class, "doctor"]);
-
     });
+
     Route::prefix("/schedule")->group(function () {
         Route::get("/", [scheduleController::class, "index"])->name("schedule");
         Route::post("/create", [scheduleController::class, "store"])->name("schedule.create");
@@ -77,7 +77,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post("/update/{id}", [scheduleController::class, "update"])->name("schedule.update");
         Route::get("/delete/{id}", [scheduleController::class, "delete"])->name("schedule.delete");
         Route::get("/getDoctor/{id}", [scheduleController::class, "doctor"]);
-
     });
 });
 

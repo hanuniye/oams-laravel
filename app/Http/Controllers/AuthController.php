@@ -10,7 +10,6 @@ class AuthController extends Controller
     public function index(){
         return view("login.login");
     }
-
     public function authanticate(Request $req){
         $formField = $req->validate([
             "email" => "required",
