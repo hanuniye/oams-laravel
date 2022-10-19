@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Admin extends Model
 {
+    use HasFactory;
     protected $fillable = ['name','contact',"user_id",'image'];
 
     public function userAdmin(){

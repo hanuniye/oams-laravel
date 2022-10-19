@@ -36,6 +36,7 @@
                             placeholder="Password">
                     </div>
 
+                    <input type="hidden" id="">
 
                     <div class="mb-3">
                         <label class="form-label">Image</label>
@@ -88,7 +89,8 @@
 </div>
 
 <script>
-    let updateBtn = "add";
+        let adminPswd = "";
+        let updateBtn = "add";
         let updateId;
 
         $("#addbtn").click(function(){
@@ -122,6 +124,7 @@
             }
             else{
                 url = `admin/update/${updateId}`
+                formField.append("adminId",adminPswd)
             }
 
             $.ajax({
@@ -178,6 +181,7 @@
                         dataSrc:""
                     },
                     columns:[
+
                         {data:"id"},
                         {data:"name"},
                         {data:"email"},
@@ -200,10 +204,11 @@
 
             $.get(`admin/get/${id}`)
             .done(data =>{
+                adminPswd = data.password
+                console.log(adminPswd);
                 $("#name").val(data.name)
                 $("#email").val(data.email)
                 $("#contact").val(data.contact)
-                $("#password").val(data.password)
                 $(".image").attr("src", `storage/${data.image }`)
             })
             .fail(data =>{

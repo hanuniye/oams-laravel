@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class schedule extends Model
 {
+    use HasFactory;
     protected $fillable = ["day","start_time","end_time","doctor_id"];
 
     public function schedDoctor(){

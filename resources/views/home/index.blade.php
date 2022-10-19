@@ -15,28 +15,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&display=swap" rel="stylesheet">
     <!-- css link  -->
-    <link rel="stylesheet" href="{{ url("") }}/asset/style1.css">
+    <link rel="stylesheet" href="{{ asset("asset/style1.css")}}">
   </head>
 
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
       <div class="container">
-        <a class="navbar-brand text-white" href="#">Navbar</a>
+        <a class="navbar-brand text-white" href="#" style="font-size: 19px;font-weight:500; letter-spacing:3px">Logo</a>
         <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon">
             <i class="fas fa-bars" style="color:#fff; font-size:28px;"></i>
           </span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 " style="display: flex; align-items:center;">
             <li class="nav-item ">
-              <a class="nav-link active text-white" aria-current="page" href="#">Home</a>
+              <a class="nav-link active text-white" aria-current="page" href="/">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active text-white" href="#">Features</a>
+              <a class="nav-link active text-white" href="#">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active text-white" href="#">Pricing</a>
+              <a class="nav-link active text-white" href="#">Services</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active text-white" href="#">Contacts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" id="login" style="" href="/login">Login</a>
             </li>
           </ul>
         </div>
@@ -51,7 +57,7 @@
       <div class="text-center">
         <h1>You are in the Right Place
           at the Right Time.</h1>
-            <a href="doctorsView.php" class="btn btn-outline-light btn-rounded" id="showCaseBtn">Book an Appointment</a>
+            <a href="/doctorview" class="btn btn-outline-light btn-rounded" id="showCaseBtn">Book an Appointment</a>
       </div>
     </div>
   </section>
@@ -134,11 +140,6 @@
       <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
         © 2020 Copyright:
         <a class="text-white" style=" font-family: 'Josefin Sans', sans-serif;">Mabruuk</a>
-        <div class="d-flex justify-content-center">
-          <a class="text-white" href="/mabruuk1/real/views/admin/login.php" style=" font-family: 'Josefin Sans', sans-serif;">Admin</a>
-          /
-          <a class="text-white" href="/mabruuk1/real/views/doctor/login.php" style=" font-family: 'Josefin Sans', sans-serif;">Doctor</a>
-        </div>
       </div>
       <!-- Copyright -->
     </footer>
@@ -153,7 +154,7 @@
         document.querySelector(".navbar").classList.toggle("bg-dark")
       })
 
-          
+
     </script>
   </body>
 </html>

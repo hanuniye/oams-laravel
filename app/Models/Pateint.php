@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pateint extends Model
 {
+    use HasFactory;
     protected $fillable = ["name","fullname","gender","age","birth_date","doctor_id","user_id","contact","status"];
 
-    public function docPateint(){
-        return $this->hasOne(Doctor::class,"id","doctor_id");
+    public function doctor(){
+        return $this->belongsTo(Doctor::class);
     }
 
 }

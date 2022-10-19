@@ -21,7 +21,7 @@ class CreatePateintsTable extends Migration
             $table->date("birth_date");
             $table->integer("contact");
             $table->integer("age");
-            $table->bigInteger("doctor_id")->unsigned();
+            $table->bigInteger("doctor_id")->unsigned()->nullable();
             $table->foreign("doctor_id")->on("doctors")->references("id");
             $table->bigInteger("user_id")->unsigned()->nullable();
             $table->foreign("user_id")->on("users")->references("id");

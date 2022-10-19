@@ -19,29 +19,10 @@
 
     <!-- Custom styles for this template-->
     <link href="{{ url("") }}/asset/css/sb-admin-2.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset("asset/bootstrap.min.css") }}">
 
 </head>
 
 <body >
-   {{-- navbar  --}}
-   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon">
-          <i class="fas fa-bars" style="color:#fff; font-size:28px;"></i>
-        </span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ">
-          <li class="nav-item ">
-            <a class="nav-link active text-white" aria-current="page" href="/">Home</a>
-          </li>
-
-        </ul>
-      </div>
-    </div>
-  </nav>
 <div class="row justify-content-center">
     <div class="col-6">
     <div class="container justify-content-center py-3 px-5">
@@ -60,7 +41,7 @@
                         </div>
                     </div>
 
-                    <form id="form">
+                    <form id="form" method="POST">
                         @csrf
                         <div class="form-group row justify-content-center">
                             <div class="col-sm-12 mb-3 mb-sm-0">
@@ -76,10 +57,13 @@
                             </div>
 
                         </div>
-                        <button type='submit' class="btn btn-primary btn-block ">
+                        <button type='submit' class="btn btn-primary btn-block">
                            login
                         </button>
                     </form>
+                    <div class="text-center mt-2 register">
+                        <a class="small" style="font-size:15px;" href="/register">Register!</a>
+                    </div>
                 </div>
             </div>
             <!-- <div class="col-lg-4"></div> -->
@@ -102,10 +86,7 @@
     <script src="{{ url("") }}/asset/js/sb-admin-2.min.js"></script>
 
     <script>
-        $("#alert").hide()
-        let styl = "none";
-        let test = $("#block").val()
-        console.log(test);
+        $("#alert").hide();
 
         $("#form").submit(function(e){
             e.preventDefault();

@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="modal" tabindex="-1" id="doctrorModal">
+<div class="modal" tabindex="-1" id="receptionModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,7 +11,7 @@
             <div class="modal-body">
 
               @if (auth()->user()->role == "admin")
-                    <form id="form" method="POST" enctype="multipart/form-data">
+                    <form id="form" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-3">
@@ -31,26 +31,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="Password" class="form-label">Age</label>
-                            <input type="text" class="form-control" id="age" name="age" placeholder="Age">
-                        </div>
-
-                        <div class="mb-3">
                             <label for="Phone" class="form-label">Phone</label>
                             <input type="text" class="form-control" id="contact" name="contact" placeholder="Contacts">
-                        </div>
-
-
-                        <div class="mb-3">
-                            <label for="Specialization" class="form-label">Specialization</label>
-                            <select class="form-control" id="specialist" name="specialist">
-
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="Expreince" class="form-label">Expreince</label>
-                            <input type="text" class="form-control" id="expreince" name="expreince" placeholder="Expreince">
                         </div>
 
                         <div class="mb-3">
@@ -83,27 +65,10 @@
                     <input type="text" class="form-control" id="name" name="name" placeholder="Name">
                 </div>
 
-                <div class="mb-3">
-                    <label for="Password" class="form-label">Age</label>
-                    <input type="text" class="form-control" id="age" name="age" placeholder="Age">
-                </div>
 
                 <div class="mb-3">
                     <label for="Phone" class="form-label">Phone</label>
                     <input type="text" class="form-control" id="contact" name="contact" placeholder="Contacts">
-                </div>
-
-
-                <div class="mb-3">
-                    <label for="Specialization" class="form-label">Specialization</label>
-                    <select class="form-control" id="specialist" name="specialist">
-
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="Expreince" class="form-label">Expreince</label>
-                    <input type="text" class="form-control" id="expreince" name="expreince" placeholder="Expreince">
                 </div>
 
                 <div class="mb-3">
@@ -142,10 +107,7 @@
                         <th>Id</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Age</th>
                         <th>Phone</th>
-                        <th>Specailization</th>
-                        <th>Expreince</th>
                         <th>Image</th>
                         <th>DOCreate</th>
                         <th>Actions</th>
@@ -160,31 +122,20 @@
 </div>
 
 <script>
-    let doctorPswd = "";
-    $.get('specialization/get')
-    .done(data =>{
-        console.log(data);
-        let info = "<option>..select..</option>";
+        let receptionPswd = "";
 
-        data.forEach(item =>{
-            info += `<option value="${item.id}">${item.name}</option>`
-        })
-        $("#specialist").html(info)
-    })
-    .fail(data =>{
-        console.log(data);
-    })
-
-    let updateBtn = "add";
+        let updateBtn = "add";
         let updateId;
 
         @if (auth()->user()->role == "admin")
             $("#addbtn").click(function(){
-                $("#doctrorModal").modal("toggle")
+                $(".modal-title").html("Add Receptionist")
+                $("#receptionModal").modal("toggle")
                 $("form")[0].reset();
                 updateBtn = "add"
                 $(".image").attr("src", "");
             })
+
         @endif
 
         let placeImage = document.querySelector(".image")
@@ -200,20 +151,20 @@
             })
         })
 
-       @if (auth()->user()->role == "admin")
+    @if (auth()->user()->role == "admin")
 
-       $("#form").submit(function(e){
+    $("#form").submit(function(e){
             e.preventDefault()
 
             let formField = new FormData(this);
             let url = "";
 
             if(updateBtn == "add"){
-                url = "doctor/create"
+                url = "reception/create"
             }
             else{
-                url = `doctor/update/${updateId}`
-                formField.append("doctorPswd",doctorPswd)
+                url = `reception/update/${updateId}`
+                formField.append("receptionPswd",receptionPswd)
             }
 
             $.ajax({
@@ -225,12 +176,12 @@
 
                 success:function(data){
                     $("#form")[0].reset()
-                    $("#doctorModal").modal("toggle");
+                    $("#receptionModal").modal("toggle");
 
                     if(data.status == true){
                         iziToast.success({
                             title: 'success',
-                            message: data.massege,
+                            message: data.data,
                             position:"topCenter"
                         });
 
@@ -244,9 +195,10 @@
                 }
             })
 
-        })
+    })
 
-       @else
+
+    @else
 
        $("#form").submit(function(e){
             e.preventDefault()
@@ -254,7 +206,7 @@
             let formField = new FormData(this);
 
             $.ajax({
-                url:`doctor/update/${updateId}`,
+                url:`reception/update/${updateId}`,
                 data:formField,
                 method:"post",
                 processData:false,
@@ -262,12 +214,12 @@
 
                 success:function(data){
                     $("#form")[0].reset()
-                    $("#doctorModal").modal("toggle");
+                    $("#receptionModal").modal("toggle");
 
                     if(data.status == true){
                         iziToast.success({
                             title: 'success',
-                            message: data.massege,
+                            message: data.data,
                             position:"topCenter"
                         });
 
@@ -285,20 +237,17 @@
 
        @endif
 
-      $(document).ready(function(){
+        $(document).ready(function(){
             $('.table').DataTable({
                 ajax:{
-                    url:"doctor/get",
+                    url:"reception/get",
                     dataSrc:""
                 },
                 columns:[
-                    {data:"id"},
+                    {data:"receptionId"},
                     {data:"name"},
                     {data:"email"},
-                    {data:"age"},
                     {data:"contact"},
-                    {data:"specialist_id"},
-                    {data:"exprience"},
                     {data:"image"},
                     {data:"created_at"},
                     {data:"action"},
@@ -307,21 +256,21 @@
         })
 
 
-
         function getUser(id){
             updateBtn = "update"
-            $("#doctrorModal").modal("toggle")
+            $("#receptionModal").modal("toggle")
             updateId = id;
 
-            $.get(`doctor/get/${id}`)
+            $(".modal-title").html("Edit Reception")
+
+            $.get(`reception/get/${id}`)
             .done(data =>{
-                doctorPswd = data.password;
+                console.log(data);
+                receptionPswd = data.password;
+
                 $("#name").val(data.name)
                 $("#email").val(data.email)
-                $("#age").val(data.age)
                 $("#contact").val(data.contact)
-                $("#specialist").val(data.specialist_id)
-                $("#expreince").val(data.exprience)
                 $(".image").attr("src", `storage/${data.image }`)
             })
             .fail(data =>{
@@ -330,6 +279,7 @@
         }
 
        @if(auth()->user()->role == "admin"){
+        
          function deleteUser(id){
             swal({
                 title: "Are you sure?",
@@ -340,7 +290,7 @@
                 })
                 .then((willDelete) => {
                 if (willDelete) {
-                    $.get(`doctor/delete/${id}`)
+                    $.get(`reception/delete/${id}`)
                     .done(data =>{
                         location.reload()
                     })

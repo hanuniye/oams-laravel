@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
@@ -26,23 +27,12 @@ class AdminController extends Controller
 
         DB::beginTransaction();
 
-        if($req->hasFile("image")){
-            $users = User::create([
-                "name" => $req->input("name"),
-                "email" => $req->input("email"),
-                "password" => bcrypt($req->input("password")),
-                "role" => "admin",
-                "image" => $req->file("image")->store("images", "public")
-            ]);
-        }
-        else{
-            $users = User::create([
-                "name" => $req->input("name"),
-                "email" => $req->input("email"),
-                "password" => bcrypt($req->input("password")),
-                "role" => "admin",
-            ]);
-        }
+        $users = User::create([
+            "name" => $req->input("name"),
+            "email" => $req->input("email"),
+            "password" => bcrypt($req->input("password")),
+            "role" => "admin",
+        ]);
 
         if ($req->hasFile("image")) {
             Admin::create([
@@ -70,9 +60,13 @@ class AdminController extends Controller
     public function getAll()
     {
         $data = Admin::all();
+        $adminId = 0;
 
         foreach ($data as $item) {
+            $adminId ++;
+
             $item["email"] = $item->userAdmin->email;
+            $item["id"] = $adminId;
             $item["action"] =
                 "<td><i onclick='getUser($item->user_id)' class='fa-solid fa-pen-to-square text-success' style='font-size:20px; cursor:pointer;'></i></td>
             <td><i onclick='deleteUser($item[id])'  class='fa-solid fa-circle-minus text-danger ' style='font-size:20px; cursor:pointer;'></i></td>";
@@ -85,6 +79,7 @@ class AdminController extends Controller
     {
         $data = Admin::where("user_id", $id)->first();
         $user = User::find($id);
+
         $data["email"] = $user->email;
         $data["password"] = $user->password;
         return $data;
@@ -92,11 +87,16 @@ class AdminController extends Controller
 
     public function update($id, Request $req)
     {
-        $req->validate([
+        $pswd = "";
+        if(isset($_POST['adminId'])){
+            $pswd = $_POST['adminId'];
+        }
+
+        $formField = $req->validate([
             "name" => "required",
             "email" => "required",
             "contact" => "required",
-            "password" => "required",
+            "password" => "",
         ]);
 
         DB::beginTransaction();
@@ -116,23 +116,26 @@ class AdminController extends Controller
         }
 
 
+
         $user = User::find($id);
-        if($req->hasFile("image")){
-            $user->update([
-                "name" => $req->input("name"),
-                "email" => $req->input("email"),
-                "password" => bcrypt($req->input("password")),
-                "image" => $req->file("image")->store("images", "public")
-            ]);
-        }
+        if($formField['password']){
+                $user->update([
+                    "name" => $req->input("name"),
+                    "email" => $req->input("email"),
+                    "password" => bcrypt($req->input("password")),
+                ]);
+            }
         else{
-            $user->update([
-                "name" => $req->input("name"),
-                "email" => $req->input("email"),
-                "password" => bcrypt($req->input("password")),
-            ]);
+             
+                $user->update([
+                    "name" => $req->input("name"),
+                    "email" => $req->input("email"),
+                    "password" => $pswd,
+                ]);
+
         }
-      
+
+
         DB::commit();
 
         return [

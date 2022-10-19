@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title></title>
 
@@ -31,6 +32,8 @@
     <!-- Bootstrap core JavaScript-->
     <script src="{{ url("") }}/asset/vendor/jquery/jquery.min.js"></script>
     <script src="{{ url("") }}/asset/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="{{ asset("asset/bootstrap.min.css") }}">
+
 
     <!-- Core plugin JavaScript-->
     <script src="{{ url("") }}/asset/vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -136,7 +139,7 @@
                 </a>
             </li>
 
-            @else
+            @elseif (Auth()->user()->role == "doctor")
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
@@ -146,6 +149,24 @@
                 </a>
             </li>
 
+            @endif
+
+            @if(auth()->user()->role == "admin")
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/reception">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Reception</span>
+                </a>
+            </li>
+            @endif
+
+            @if(auth()->user()->role == "receptionist")
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/reception">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
             @endif
 
 
@@ -158,13 +179,14 @@
             </li>
             @endif
 
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="{{ route("pateint") }}">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Pateints</span>
-                </a>
-            </li>
+            @if (Auth()->user()->role == "admin")
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ route("pateint") }}">
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Pateints</span>
+                    </a>
+                </li>
+            @endif
 
             @if(auth()->user()->role == "admin")
             <li class="nav-item">
@@ -175,6 +197,18 @@
             </li>
             @endif
 
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/appointment">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Appointment</span>
+                </a>
+            </li>
+
+
+
+
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
@@ -182,6 +216,7 @@
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
+
 
 
 
@@ -212,7 +247,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name
                                     }}</span>
-                                <img class="img-profile rounded-circle" src="storage/{{ auth()->user()->image }}">
+                                <img class="img-profile rounded-circle" src="">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -244,7 +279,7 @@
                                 </div>
                                 <div class="modal-body" style="display: flex; justify-content:center; height:250px">
                                     <div class="profile-image">
-                                        <img src="storage/{{ auth()->user()->image }}" alt="">
+                                        <img id="view-profile" src="" alt="">
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -254,7 +289,9 @@
                             </div>
                         </div>
                     </div>
+
                     @yield("content","dashboard")
+                <input type="hidden" id="role" value="{{ Auth()->user()->id }}">
                 </div>
                 <!-- /.container-fluid -->
 
@@ -294,18 +331,54 @@
                     </button>
                 </div>
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
+                <div class="modal-footer ">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="logout">Logout</a>
+                    <a class="btn btn-primary" href="/logout">Logout</a>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        let profileImage = "";
+
         function profile(){
             $("#profileModal").modal("toggle")
+            $("#view-profile").attr("src" ,`storage/${profileImage}`)
         }
+
+        let id = $("#role").val();
+
+        @if (Auth()->user()->role == "admin")
+            $.get(`admin/get/${id}`)
+            .done(data =>{
+                console.log(data);
+                profileImage = data.image
+                $(".img-profile").attr("src",`storage/${data.image}`)
+            })
+            .fail(data =>{
+                console.log(data);
+            })
+        @elseif (Auth()->user()->role == "doctor")
+            $.get(`doctor/get/${id}`)
+            .done(data =>{
+                console.log(data);
+                profileImage = data.image
+                $(".img-profile").attr("src",`storage/${data.image}`)
+            })
+            .fail(data =>{
+                console.log(data);
+            })
+        @else
+            $.get(`reception/get/${id}`)
+            .done(data =>{
+                profileImage = data.image
+                $(".img-profile").attr("src",`storage/${data.image}`)
+            })
+            .fail(data =>{
+                console.log(data);
+            })
+        @endif
     </script>
 </body>
 

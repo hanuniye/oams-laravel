@@ -27,24 +27,13 @@ class DoctorController extends Controller
         ]);
 
         DB::beginTransaction();
-
-        if($req->hasFile("image")){
-            $users = User::create([
-                "name" => $req->input("name"),
-                "email" => $req->input("email"),
-                "password" => bcrypt($req->input("password")),
-                "role" => "doctor",
-                "image" => $req->file("image")->store("images","public")
-            ]);
-        }
-        else{
-            $users = User::create([
-                "name" => $req->input("name"),
-                "email" => $req->input("email"),
-                "password" => bcrypt($req->input("password")),
-                "role" => "doctor"
-            ]);
-        }
+        
+        $users = User::create([
+            "name" => $req->input("name"),
+            "email" => $req->input("email"),
+            "password" => bcrypt($req->input("password")),
+            "role" => "doctor"
+        ]);
 
         if ($req->hasFile("image")) {
             Doctor::create([
@@ -85,7 +74,7 @@ class DoctorController extends Controller
                 $item["specialist_id"] = $item->specDoctor->name;
                 $item["action"] =
                     "<td><i onclick='getUser($item->user_id)' class='fa-solid fa-pen-to-square text-success' style='font-size:20px; cursor:pointer;'></i></td>
-            <td><i onclick='deleteUser($item[id])'  class='fa-solid fa-circle-minus text-danger ' style='font-size:20px; cursor:pointer;'></i></td>";
+                <td><i onclick='deleteUser($item[id])'  class='fa-solid fa-circle-minus text-danger ' style='font-size:20px; cursor:pointer;'></i></td>";
                 $item["image"] = "<img src='storage/$item->image' class='img'>";
             }
 
@@ -120,18 +109,23 @@ class DoctorController extends Controller
 
     public function update($id, Request $req)
     {
+        $pswd = "";
+        if(isset($_POST["doctorPswd"])){
+            $pswd = $_POST["doctorPswd"];
+        }
+
         if (auth()->user()->role == "admin") {
-            $req->validate([
+            $formField = $req->validate([
                 "name" => "required",
                 "email" => "required",
                 "contact" => "required",
-                "password" => "required",
+                "password" => "",
                 "expreince" => "required",
                 "specialist" => "required",
                 "age" => "required"
             ]);
         } else {
-            $req->validate([
+            $formField = $req->validate([
                 "name" => "required",
                 "contact" => "required",
                 "expreince" => "required",
@@ -165,20 +159,20 @@ class DoctorController extends Controller
 
 
             $user = User::find($id);
-            if($req->hasFile("image")){
+            if($formField['password']){
                 $user->update([
                     "name" => $req->input("name"),
                     "email" => $req->input("email"),
                     "password" => bcrypt($req->input("password")),
-                    "image" => $req->file("image")->store("images","public")
                 ]);
             }else{
                 $user->update([
                     "name" => $req->input("name"),
                     "email" => $req->input("email"),
-                    "password" => bcrypt($req->input("password")),
+                    "password" => $pswd,
                 ]);
             }
+
             DB::commit();
         } else {
             DB::beginTransaction();
@@ -204,11 +198,9 @@ class DoctorController extends Controller
             }
 
             $data = User::find($id);
-            if($req->hasFile("image")){
-                $data->update([
-                    "image" => $req->file("image")->store("image","public")
-                ]);
-            }
+            $data->update([
+                "name" => $req->input("name"),
+            ]);
             DB::commit();
         }
 

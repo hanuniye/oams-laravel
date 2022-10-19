@@ -65,15 +65,6 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="Gender" class="form-label">Status</label>
-                        <select class="form-control" id="status" name="status">
-                            <option value="booked">booked</option>
-                            <option value="confirmed">confirm</option>
-                            <option value="denied">denied</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
                         <label class="form-label">Birth_date</label>
                         <input type="date" class="form-control" id="birth_date" name="birth_date">
                     </div>
@@ -86,7 +77,9 @@
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
             </form>
+
         @else
+
         <form id="form" method="POST" enctype="multipart/form-data">
             @csrf
 
@@ -94,8 +87,8 @@
                 <label for="Gender" class="form-label">Status</label>
                 <select class="form-control" id="status" name="status">
                     <option value="booked">booked</option>
-                    <option value="confirmed">confirm</option>
-                    <option value="denied">denied</option>
+                    <option value="confirmed">in-proces</option>
+                    <option value="denied">cencel</option>
                 </select>
             </div>
 
@@ -233,7 +226,6 @@
         })
 
         $(document).ready(function(){
-
                 $('.table').DataTable({
                     ajax:{
                         url:"pateint/get",
@@ -247,7 +239,7 @@
                         {data:"contact"},
                         {data:"gender"},
                         {data:"birth_date"},
-                        {data:"doctor_id"},
+                        {data:"doctor_name"},
                         {data:"status"},
                         {data:"created_at"},
                         {data:"action"},
@@ -273,6 +265,7 @@
                 $("#birth_date").val(data.birth_date)
                 $("#password").val(data.password)
                 $("#status").val(data.status)
+                $("#specialist").val(data.specialist)
 
                 $("#doctor").html(`<option value='${data.doctor_id}'>${data.doctor_name}</option>`)
             })
