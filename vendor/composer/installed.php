@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'v8.6.12',
-        'version' => '8.6.12.0',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => NULL,
+        'reference' => 'f7f4b43960f99d8d8f02fa11a5b016ebe9cb6067',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -395,12 +395,12 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-            'pretty_version' => 'v8.6.12',
-            'version' => '8.6.12.0',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => NULL,
+            'reference' => 'f7f4b43960f99d8d8f02fa11a5b016ebe9cb6067',
             'dev_requirement' => false,
         ),
         'laravel/sail' => array(
@@ -766,8 +766,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0',
-                1 => '1.0.0 || 2.0.0 || 3.0.0',
+                0 => '1.0.0 || 2.0.0 || 3.0.0',
+                1 => '1.0|2.0',
             ),
         ),
         'psr/simple-cache' => array(
@@ -970,6 +970,15 @@
             'aliases' => array(),
             'reference' => 'c6c1022351a901512170118436c764e473f6de8c',
             'dev_requirement' => true,
+        ),
+        'spatie/laravel-permission' => array(
+            'pretty_version' => '5.5.16',
+            'version' => '5.5.16.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/laravel-permission',
+            'aliases' => array(),
+            'reference' => 'e57a67b51a02cbfcd074ed68786897db1dbbf2fa',
+            'dev_requirement' => false,
         ),
         'swiftmailer/swiftmailer' => array(
             'pretty_version' => 'v6.3.0',

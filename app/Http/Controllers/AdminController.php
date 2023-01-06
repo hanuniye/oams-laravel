@@ -5,13 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Permission;
+
 
 class AdminController extends Controller
 {
     public function index()
     {
+        // Role::create([
+        //     "name" => "pateint"
+        // ]);
+
         return view("admin.index");
     }
 
@@ -33,6 +40,10 @@ class AdminController extends Controller
             "password" => bcrypt($req->input("password")),
             "role" => "admin",
         ]);
+
+        $role = Role::findByName("admin");
+
+        $users->assignRole($role);
 
         if ($req->hasFile("image")) {
             Admin::create([
@@ -66,7 +77,7 @@ class AdminController extends Controller
             $adminId ++;
 
             $item["email"] = $item->userAdmin->email;
-            $item["id"] = $adminId;
+            $item["adminId"] = $adminId;
             $item["action"] =
                 "<td><i onclick='getUser($item->user_id)' class='fa-solid fa-pen-to-square text-success' style='font-size:20px; cursor:pointer;'></i></td>
             <td><i onclick='deleteUser($item[id])'  class='fa-solid fa-circle-minus text-danger ' style='font-size:20px; cursor:pointer;'></i></td>";
@@ -126,7 +137,7 @@ class AdminController extends Controller
                 ]);
             }
         else{
-             
+
                 $user->update([
                     "name" => $req->input("name"),
                     "email" => $req->input("email"),
@@ -143,6 +154,7 @@ class AdminController extends Controller
             "massege" => "seccessfuly updated"
         ];
     }
+
     public function delete($id){
         $data = Admin::find($id);
         $data->delete();

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    
+
     {{-- csrf  --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title></title>
@@ -107,9 +107,7 @@
             </div>
         </div>
     </div>
-      <form>
-        <input type="hidden"  id="patient_id" name="patient_id" value=''>
-      </div>
+     
     <section id="footer" style="margin-top:220px;">
         <!-- Footer -->
         <footer class="text-center text-white w-100" style="background-color: #0a4275; position:fixed; bottom:0; left:0; ">

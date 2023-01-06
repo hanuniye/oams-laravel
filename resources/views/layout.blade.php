@@ -129,7 +129,7 @@
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            @if (auth()->user()->role == "admin")
+            @if (auth()->user()->role == "admin")zz
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
@@ -169,6 +169,15 @@
             </li>
             @endif
 
+            @if(auth()->user()->role == "admin")
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/specialization">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Specialization</span>
+                </a>
+            </li>
+            @endif
+
 
             @if (auth()->user()->role == "admin")
             <li class="nav-item">
@@ -180,6 +189,15 @@
             @endif
 
             @if (Auth()->user()->role == "admin")
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="{{ route("pateint") }}">
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Pateints</span>
+                    </a>
+                </li>
+            @endif
+
+            @if (Auth()->user()->role == "receptionist")
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="{{ route("pateint") }}">
                         <i class="fas fa-fw fa-cog"></i>
@@ -290,7 +308,7 @@
                         </div>
                     </div>
 
-                    @yield("content","dashboard")
+                    @yield("content")
                 <input type="hidden" id="role" value="{{ Auth()->user()->id }}">
                 </div>
                 <!-- /.container-fluid -->

@@ -182,7 +182,7 @@
                     },
                     columns:[
 
-                        {data:"id"},
+                        {data:"adminId"},
                         {data:"name"},
                         {data:"email"},
                         {data:"contact"},
@@ -206,6 +206,8 @@
             .done(data =>{
                 adminPswd = data.password
                 console.log(adminPswd);
+
+                console.log(data);
                 $("#name").val(data.name)
                 $("#email").val(data.email)
                 $("#contact").val(data.contact)
@@ -228,6 +230,7 @@
                 if (willDelete) {
                     $.get(`admin/delete/${id}`)
                     .done(data =>{
+                        console.log(data);
                         location.reload()
                     })
                     .fail(data => {

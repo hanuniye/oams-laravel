@@ -15,7 +15,6 @@
                 <h5 class="modal-title">Modal title</h5>
             </div>
             <div class="modal-body">
-                @if (auth()->user()->role == "admin")
                 <form id="form" method="POST" enctype="multipart/form-data">
                     @csrf
 
@@ -69,37 +68,12 @@
                         <input type="date" class="form-control" id="birth_date" name="birth_date">
                     </div>
 
-
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
             </form>
-
-        @else
-
-        <form id="form" method="POST" enctype="multipart/form-data">
-            @csrf
-
-            <div class="mb-3">
-                <label for="Gender" class="form-label">Status</label>
-                <select class="form-control" id="status" name="status">
-                    <option value="booked">booked</option>
-                    <option value="confirmed">in-proces</option>
-                    <option value="denied">cencel</option>
-                </select>
-            </div>
-
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-    </form>
-        @endif
-
         </div>
     </div>
 </div>
@@ -136,6 +110,7 @@
 </div>
 
 <script>
+    let updateId ;
 
     // get specialist
     $.get('specialization/get')
@@ -170,153 +145,130 @@
         })
     })
 
+    $("#form").submit(function(e){
+        e.preventDefault()
 
-    let updateBtn = "add";
-        let updateId;
-    @if (auth()->user()->role == "admin")
-        $("#addbtn").click(function(){
-            $("#pateintModal").modal("toggle")
-            $("form")[0].reset();
-            updateBtn = "add"
-            $(".image").attr("src", "");
+        let formField = new FormData(this);
+
+        $.ajax({
+            url:`pateint/update/${updateId}`,
+            data:formField,
+            method:"post",
+            processData:false,
+            contentType:false,
+
+            success:function(data){
+                $("#form")[0].reset()
+                $("#pateintModal").modal("toggle");
+
+                if(data.status == true){
+                    iziToast.success({
+                        title: 'success',
+                        message: data.massege,
+                        position:"topCenter"
+                    });
+
+                }
+                setTimeout(() => {
+                    location.reload()
+                }, 1000);
+            },
+            error:function(data){
+                console.log(data);
+            }
         })
+
+    })
+
+    $(document).ready(function(){
+            $('.table').DataTable({
+                ajax:{
+                    url:"pateint/get",
+                    dataSrc:""
+                },
+                columns:[
+                    {data:"id"},
+                    {data:"fullname"},
+                    {data:"name"},
+                    {data:"age"},
+                    {data:"contact"},
+                    {data:"gender"},
+                    {data:"birth_date"},
+                    {data:"doctor_name"},
+                    {data:"status"},
+                    {data:"created_at"},
+                    {data:"action"},
+                ]
+            });
+    })
+
+    function getUser(id){
+        $("#pateintModal").modal("toggle")
+        updateId = id;
+
+        $.get(`pateint/get/${id}`)
+        .done(data =>{
+            console.log(data);
+            $("#name").val(data.name)
+            $("#fullname").val(data.fullname)
+            $("#gender").val(data.gender)
+            $("#age").val(data.age)
+            $("#contact").val(data.contact)
+            $("#doctor").val(data.doctor_id)
+            $("#birth_date").val(data.birth_date)
+            $("#password").val(data.password)
+            $("#status").val(data.status)
+            $("#specialist").val(data.specialist)
+
+            $("#doctor").html(`<option value='${data.doctor_id}'>${data.doctor_name}</option>`)
+        })
+        .fail(data =>{
+            console.log(data);
+        })
+    }
+
+    @if (Auth()->user()->role == "admin")
+    function deleteUser(id){
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this info!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            })
+            .then((willDelete) => {
+            if (willDelete) {
+                $.get(`pateint/delete/${id}`)
+                .done(data =>{
+                    location.reload()
+                })
+                .fail(data => {
+                    console.log(data);
+                })
+                swal("Seccessfuly has been deleted!", {
+                icon: "success",
+                });
+            } else {
+                swal("Your info is safe!");
+            }
+            });
+
+    }
     @endif
 
-        $("#form").submit(function(e){
-            e.preventDefault()
+    // function getUser(id){
+    //     updateBtn = "update"
+    //     $("#pateintModal").modal("toggle")
+    //     updateId = id;
 
-            let formField = new FormData(this);
-            let url = "";
-
-            if(updateBtn == "add"){
-                url = "pateint/create"
-            }
-            else{
-                url = `pateint/update/${updateId}`
-            }
-
-            $.ajax({
-                url:url,
-                data:formField,
-                method:"post",
-                processData:false,
-                contentType:false,
-
-                success:function(data){
-                    $("#form")[0].reset()
-                    $("#pateintModal").modal("toggle");
-
-                    if(data.status == true){
-                        iziToast.success({
-                            title: 'success',
-                            message: data.massege,
-                            position:"topCenter"
-                        });
-
-                    }
-                    setTimeout(() => {
-                        location.reload()
-                    }, 1000);
-                },
-                error:function(data){
-                    console.log(data);
-                }
-            })
-
-        })
-
-        $(document).ready(function(){
-                $('.table').DataTable({
-                    ajax:{
-                        url:"pateint/get",
-                        dataSrc:""
-                    },
-                    columns:[
-                        {data:"id"},
-                        {data:"fullname"},
-                        {data:"name"},
-                        {data:"age"},
-                        {data:"contact"},
-                        {data:"gender"},
-                        {data:"birth_date"},
-                        {data:"doctor_name"},
-                        {data:"status"},
-                        {data:"created_at"},
-                        {data:"action"},
-                    ]
-                });
-        })
-
-    @if(auth()->user()->role == "admin")
-        function getUser(id){
-            updateBtn = "update"
-            $("#pateintModal").modal("toggle")
-            updateId = id;
-
-            $.get(`pateint/get/${id}`)
-            .done(data =>{
-                console.log(data);
-                $("#name").val(data.name)
-                $("#fullname").val(data.fullname)
-                $("#gender").val(data.gender)
-                $("#age").val(data.age)
-                $("#contact").val(data.contact)
-                $("#doctor").val(data.doctor_id)
-                $("#birth_date").val(data.birth_date)
-                $("#password").val(data.password)
-                $("#status").val(data.status)
-                $("#specialist").val(data.specialist)
-
-                $("#doctor").html(`<option value='${data.doctor_id}'>${data.doctor_name}</option>`)
-            })
-            .fail(data =>{
-                console.log(data);
-            })
-        }
-
-        function deleteUser(id){
-            swal({
-                title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this info!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-                })
-                .then((willDelete) => {
-                if (willDelete) {
-                    $.get(`pateint/delete/${id}`)
-                    .done(data =>{
-                        location.reload()
-                    })
-                    .fail(data => {
-                        console.log(data);
-                    })
-                    swal("Seccessfuly has been deleted!", {
-                    icon: "success",
-                    });
-                } else {
-                    swal("Your info is safe!");
-                }
-                });
-
-        }
-
-        @else
-        function getUser(id){
-            updateBtn = "update"
-            $("#pateintModal").modal("toggle")
-            updateId = id;
-
-            $.get(`pateint/get/${id}`)
-            .done(data =>{
-                $("#status").val(data.status)
-            })
-            .fail(data =>{
-                console.log(data);
-            })
-        }
-
-        @endif
+    //     $.get(`pateint/get/${id}`)
+    //     .done(data =>{
+    //         $("#status").val(data.status)
+    //     })
+    //     .fail(data =>{
+    //         console.log(data);
+    //     })
+    // }
 
 
 </script>

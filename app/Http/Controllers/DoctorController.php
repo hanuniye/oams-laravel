@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Doctor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class DoctorController extends Controller
 {
@@ -27,13 +28,17 @@ class DoctorController extends Controller
         ]);
 
         DB::beginTransaction();
-        
+
         $users = User::create([
             "name" => $req->input("name"),
             "email" => $req->input("email"),
             "password" => bcrypt($req->input("password")),
             "role" => "doctor"
         ]);
+
+        $role = Role::findByName("doctor");
+
+        $users->assignRole($role);
 
         if ($req->hasFile("image")) {
             Doctor::create([
@@ -74,7 +79,7 @@ class DoctorController extends Controller
                 $item["specialist_id"] = $item->specDoctor->name;
                 $item["action"] =
                     "<td><i onclick='getUser($item->user_id)' class='fa-solid fa-pen-to-square text-success' style='font-size:20px; cursor:pointer;'></i></td>
-                <td><i onclick='deleteUser($item[id])'  class='fa-solid fa-circle-minus text-danger ' style='font-size:20px; cursor:pointer;'></i></td>";
+                <td><i onclick='deleteUser($item->user_id)'  class='fa-solid fa-circle-minus text-danger ' style='font-size:20px; cursor:pointer;'></i></td>";
                 $item["image"] = "<img src='storage/$item->image' class='img'>";
             }
 
@@ -211,8 +216,15 @@ class DoctorController extends Controller
     }
     public function delete($id)
     {
-        $data = Doctor::find($id);
+        DB::beginTransaction();
+        $data = Doctor::where("user_id",$id)->first();
         $data->delete();
+
+        
+
+        $user = User::find($id);
+        $user->delete();
+        DB::commit();
     }
 
 }

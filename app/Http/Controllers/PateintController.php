@@ -2,35 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\Pateint;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PateintController extends Controller
 {
     public function index()
     {
         return view("pateints.index");
-    }
-
-    public function store(Request $req)
-    {
-        $formField = $req->validate([
-            "name" => "required",
-            "fullname" => "required",
-            "contact" => "required",
-            "gender" => "required",
-            "birth_date" => "required",
-            "age" => "required",
-            "doctor_id" => "required"
-        ]);
-
-        Pateint::create($formField);
-
-        return [
-            "status" => true,
-            "massege" => "seccessfuly added"
-        ];
     }
 
     public function getAll()
@@ -68,18 +50,8 @@ class PateintController extends Controller
         return $data;
     }
 
-    public function update($id, Request $req)
+    public function update(Request $req,$id)
     {
-        if(auth()->user()->role != "admin"){
-            $formField = $req->validate([
-                "status" => "required"
-            ]);
-
-            $data = Pateint::find($id);
-            $data->update($formField);
-
-        }
-        else{
             $formField = $req->validate([
                 "name" => "required",
                 "fullname" => "required",
@@ -88,13 +60,20 @@ class PateintController extends Controller
                 "birth_date" => "required",
                 "age" => "required",
                 "doctor_id" => "required",
-                "status" => "required"
             ]);
 
+            DB::beginTransaction();
 
-            $data = Pateint::find($id);
-            $data->update($formField);
-        }
+            $pateint = Pateint::find($id);
+            $pateint->update($formField);
+
+            $appoint = Appointment::where("pateint_id",$id)->first();
+
+            $appoint->update([
+                "doctor_id" => $req->input("doctor_id")
+            ]);
+
+            DB::commit();
 
 
         return [
@@ -102,6 +81,7 @@ class PateintController extends Controller
             "massege" => "seccessfuly updated"
         ];
     }
+
     public function delete($id){
         $data = Pateint::find($id);
         $data->delete();

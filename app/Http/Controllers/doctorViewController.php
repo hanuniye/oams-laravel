@@ -82,6 +82,7 @@ class doctorViewController extends Controller
         $pateint = Pateint::where('user_id',$id)->first();
 
         $data = Appointment::where("pateint_id",$pateint->id)->get();
+
         foreach($data as $item){
             if($item->status === "booked"){
                 $item["status"] = "<span class='badge bg-warning'>$item->status</span>";
@@ -98,7 +99,7 @@ class doctorViewController extends Controller
 
             $item["doctor_name"] = $item->doctor->name;
             $item["pateint_name"] = $item->pateint->name;
-            $item["contact"] = $item->doctor->contact;
+            $item["contact"] = $item->pateint->contact;
 
             $specialist = Specialization::find($item->doctor->specialist_id);
             $item["specialist"] = $specialist->name;

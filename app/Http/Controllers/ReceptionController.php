@@ -8,6 +8,7 @@ use App\Models\Reception;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 
 class ReceptionController extends Controller
@@ -25,7 +26,7 @@ class ReceptionController extends Controller
         ]);
 
         DB::beginTransaction();
-        
+
         $user = User::create([
             "name" => $req->input("name"),
             "email" => $req->input("email"),
@@ -33,6 +34,10 @@ class ReceptionController extends Controller
             "password" =>bcrypt($req->input("password")) ,
             "role" => "receptionist",
         ]);
+
+        $role = Role::findByName("receptionist");
+
+        $user->assignRole($role);
 
         if($req->hasFile("image")){
             Reception::create([
@@ -144,7 +149,7 @@ class ReceptionController extends Controller
                     "password" => $pswd,
                 ]);
             }
-            
+
             DB::commit();
         }
         else{
