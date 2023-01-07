@@ -110,10 +110,7 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+                <div class="sidebar-brand-text mx-3">Mabruuk</div>
             </a>
 
             <!-- Divider -->
@@ -129,12 +126,12 @@
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            @if (auth()->user()->role == "admin")zz
+            @if (auth()->user()->role == "admin")
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link" href="{{ route("admin") }}">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fa-solid fa-user"></i>
                     <span>Profile</span>
                 </a>
             </li>
@@ -144,7 +141,7 @@
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link" href="{{ route("doctor") }}">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fa-solid fa-user"></i>
                     <span>Profile</span>
                 </a>
             </li>
@@ -163,7 +160,7 @@
             @if(auth()->user()->role == "receptionist")
             <li class="nav-item">
                 <a class="nav-link collapsed" href="/reception">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fa-solid fa-user"></i>
                     <span>Profile</span>
                 </a>
             </li>
@@ -182,7 +179,7 @@
             @if (auth()->user()->role == "admin")
             <li class="nav-item">
                 <a class="nav-link" href="{{ route("doctor") }}">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fa-solid fa-user-doctor"></i>
                     <span>Doctor</span>
                 </a>
             </li>
@@ -191,7 +188,7 @@
             @if (Auth()->user()->role == "admin")
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="{{ route("pateint") }}">
-                        <i class="fas fa-fw fa-cog"></i>
+                        <i class="fa-sharp fa-solid fa-notes-medical"></i>
                         <span>Pateints</span>
                     </a>
                 </li>
@@ -200,7 +197,7 @@
             @if (Auth()->user()->role == "receptionist")
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="{{ route("pateint") }}">
-                        <i class="fas fa-fw fa-cog"></i>
+                        <i class="fa-sharp fa-solid fa-notes-medical"></i>
                         <span>Pateints</span>
                     </a>
                 </li>
@@ -209,7 +206,7 @@
             @if(auth()->user()->role == "admin")
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ route("schedule") }}">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fa-regular fa-calendar-check"></i>
                     <span>Schedule</span>
                 </a>
             </li>
@@ -219,7 +216,7 @@
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="/appointment">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fa-regular fa-calendar-days"></i>
                     <span>Appointment</span>
                 </a>
             </li>
